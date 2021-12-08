@@ -1,54 +1,69 @@
 from abc import ABCMeta, abstractmethod
 
+# Parent class of Tank, Artillery, Infantry and Robot.
 class Player(metaclass=ABCMeta):
 
+    # Player constructor.
     def __init__(self, strength, attacks, health):
         self.strength = strength
         self.attacks = attacks
         self.health = health
 
+    # Each child class has its own impact, mutable along the game.
     @property
     @abstractmethod
     def attack_impact(self):
         pass
 
+    # Updates attacks remaining, after an attack.
     def has_attacked(self):
         self.attacks -= 1
 
+    # Checks if the given instance has died, after an attack.
     def is_dead(self):
         return self.health <= 0
 
 
+# Child class of Player.
 class Tank(Player):
 
+    # Tank constructor.
     def __init__(self):
         super().__init__(200, 2, 200)
 
+    # Implements abstract method, which is also a property of the object.
     @property
     def attack_impact(self):
         return int(self.strength * self.health / 200)
 
 
+# Child class of Player.
 class Artillery(Player):
 
+    # Artillery constructor.
     def __init__(self):
         super().__init__(500, 1, 50)
 
+    # Implements abstract method, which is also a property of the object.
     @property
     def attack_impact(self):
         return int(self.strength * self.health / 50)
 
 
+# Child class of Player.
 class Infantry(Player):
 
+    # Infantry constructor.
     def __init__(self):
         super().__init__(100, 3, 100)
 
+    # Implements abstract method, which is also a property of the object.
     @property
     def attack_impact(self):
         return int(self.strength * self.health / 100)
 
 
+# Child class of Player.
 class Robot(Player):
 
     # Different attacks.
@@ -67,15 +82,22 @@ class Robot(Player):
     HEAL3 = 400
     HEAL3_NRG = 400
 
+    # Robot constructor.
     def __init__(self):
         super().__init__(None, None, 750)
         self.nrg = 500
 
+    # Implemented to assure inheritance.
     @property
     def attack_impact(self):
         pass
 
-    def heal(self, x):
+    # Recovers 50% of his nrg in the beginning of each turn till a MAX of 500.
+    def heal(self):
+        self.nrg = 500 if self.nrg * 1.5 > 500 else int(self.nrg * 1.5)
+
+    # Heals Robot depending on which type of healing is done, if it has enough nrg.
+    def heal_type(self, x):
         if x == 1 and self.nrg >= 200:
             self.health += Robot.HEAL1
             self.nrg -= Robot.HEAL1_NRG
@@ -87,10 +109,14 @@ class Robot(Player):
             self.nrg -= Robot.HEAL3_NRG
         else: print("Not enough energy.")
 
+    # Attacks a certain target by crane, touch or sound.
     def attack(self, type, target):
         self.nrg -= Robot.CRANE_NRG if type == 1 else Robot.TOUCH_NRG if type == 2 else Robot.SOUND_NRG
         target.health -= Robot.CRANE if type == 1 else Robot.TOUCH if type == 2 else Robot.SOUND
 
+
+
+""" """ """ """ """ """ """ TESTING SECTION """ """ """ """ """ """ """
 
 print()
 print("######################## TESTING ########################")
@@ -99,9 +125,10 @@ robot_1 = Robot()
 print("Strength:", robot_1.strength, " Attacks:", robot_1.attacks, end = "  ")
 print("Health:", robot_1.health, end = "  ")
 print("Attack impact:", robot_1.attack_impact, " Energy:", robot_1.nrg)
-robot_1.heal(1)
+robot_1.heal_type(1)
 print("Health:", robot_1.health, " Energy:", robot_1.nrg)
-robot_1.heal(3)
+robot_1.heal_type(3)
+robot_1.heal()
 print("Health:", robot_1.health, " Energy:", robot_1.nrg)
 print()
 inf_1 = Infantry()

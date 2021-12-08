@@ -19,7 +19,7 @@ MAX_TURNS = 13
 ev3 = EV3Brick()
 ev3.speaker.set_volume(100, which='_all_')
 # ev3.speaker.set_speech_options(language='en', voice='f1', speed=None, pitch=99)
-# print("Battery(mV): ", ev3.battery.voltage())
+# print("Battery(mV):", ev3.battery.voltage())
 if ev3.battery.voltage() < 2250:
     ev3.speaker.say("Battery below 25%. Please, recharge.")
 ev3.light.on(Color.WHITE)
