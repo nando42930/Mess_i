@@ -36,7 +36,7 @@ right_motor = Motor(Port.C)
 medium_motor = Motor(Port.D)
 
 # Initialize drive base.
-robot = DriveBase(left_motor, right_motor, wheel_diameter=55.5, axle_track=104)
+robot = DriveBase(left_motor, right_motor, wheel_diameter=35, axle_track=184)
 
 # Initialize sensors.
 color_sensor = ColorSensor(Port.S1)
