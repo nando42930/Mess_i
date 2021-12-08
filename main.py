@@ -41,6 +41,7 @@ robot = DriveBase(left_motor, right_motor, wheel_diameter=35, axle_track=184)
 # Initialize sensors.
 color_sensor = ColorSensor(Port.S1)
 touch_sensor = TouchSensor(Port.S2)
+ultrasonic_sensor = UltrasonicSensor(Port.S3)
 
 # Main
 if not predicted_winner():
