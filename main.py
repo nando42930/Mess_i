@@ -119,6 +119,7 @@ ev3.screen.load_image(ImageFile.BLACK_EYE)      # EV3 was attacked.
 ev3.speaker.play_file(SoundFile.OUCH)
 
 ev3.speaker.play_file(SoundFile.LASER)          # Touch attack.
-ev3.speaker.play_file(SoundFile.KUNG_FU)        # Sound attack.
-ev3.speaker.play_file(SoundFile.SNEEZING)       # Crane attack.
+ev3.speaker.play_file('SUIII.wav')              # Sound attack.
+ev3.speaker.play_file(SoundFile.KUNG_FU)        # Crane attack.
+ev3.speaker.play_file(SoundFile.SNEEZING)
 ev3.speaker.play_file(SoundFile.HORN_2)
