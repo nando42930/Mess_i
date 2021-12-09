@@ -73,7 +73,7 @@ class Robot(Player):
     TOUCH_NRG = 150
     SOUND = 50
     SOUND_NRG = 50
-    
+
     # Types of healing.
     HEAL1 = 100
     HEAL1_NRG = 200
