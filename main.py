@@ -169,7 +169,7 @@ def init():
 # Game's lifetime.
 def main():
     init()
-    resume()
+    # resume()
     for x in range(MAX_TURNS):
         ev3.speaker.play_file(SoundFile.THREE)
         wait(1000)
@@ -178,12 +178,12 @@ def main():
         ev3.speaker.play_file(SoundFile.ONE)
         wait(1000)
         ev3.speaker.play_file(SoundFile.ZERO)
-        speaker.beep()                          # Turn begins.
+        ev3.speaker.beep()                          # Turn begins.
         if(x % 2 == 0):                         # Enemy's turn.
             """ !!!!!!!!!! TODO !!!!!!!!!! """
             c = None
             time = 0
-            reset()
+            # reset()
             while time < 5000:
                 c = color_sensor.color()
                 if c == Color.WHITE or c == Color.BLACK:
@@ -198,7 +198,7 @@ def main():
                 ev3.speaker.play_file(SoundFile.SORRY)
                 ev3.speaker.play_file(SoundFile.CRYING)
                 time = 0
-                reset()
+                # reset()
                 while time < 5000:
                     ev3.screen.load_image(ImageFile.HURT)
                     wait(500)
@@ -219,7 +219,7 @@ def main():
             else:
                 no_action()
                 reposition(SLOTS-1)
-        speaker.beep()                          # Turn ends.
+        ev3.speaker.beep()                          # Turn ends.
     ev3.light.off()
 
 if __name__ == '__main__':
