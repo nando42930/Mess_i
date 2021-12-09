@@ -12,9 +12,6 @@ from pybricks.media.ev3dev import SoundFile, ImageFile, Font
 # Click "Open user guide" on the EV3 extension tab for more information.
 
 
-# Initialize global variables.
-MAX_TURNS = 13
-
 # Initialize EV3 Brick.
 ev3 = EV3Brick()
 ev3.speaker.set_volume(100, which='_all_')
@@ -43,10 +40,42 @@ color_sensor = ColorSensor(Port.S1)
 touch_sensor = TouchSensor(Port.S2)
 ultrasonic_sensor = UltrasonicSensor(Port.S3)
 
+# Initialize global variables.
+MAX_TURNS = 13
+
+
+# Return True when EV3 is the predicted winner. Otherwise, return False.
+def predicted_winner():
+    """ TODO """
+    return True
+
+# Turn without attacks.
+def no_action():
+    ev3.screen.load_image(ImageFile.ZZZ)
+    ev3.speaker.play_file(SoundFile.INSECT_CHIRP)
+
+# EV3 looks for targets in the field.
+def find_target():
+    ev3.screen.load_image(ImageFile.TARGET)
+    ev3.speaker.play_file(SoundFile.SONAR)
+    """ TODO """
+    return None
+
+# EV3 chooses a target.
+def choose_target(targets):
+    """ TODO """
+    pass
+
+# EV3 attacks a target.
+def attack(target):
+    """ TODO """
+    pass
+
+
 # Main
 if not predicted_winner():
     ev3.screen.load_image(ImageFile.HURT)
-    ev3.speaker.play_file(SoundFile.UH-OH)
+    ev3.speaker.play_file(SoundFile.UH_OH)
     ev3.speaker.play_file(SoundFile.SORRY)
     ev3.speaker.play_file(SoundFile.CRYING)
     resume()
@@ -82,32 +111,6 @@ else:
         speaker.beep()                          # Turn ends.
 ev3.light.off()
 
-# Return True when EV3 is the predicted winner. Otherwise, return False.
-def predicted_winner():
-    """ TODO """
-    return True
-
-# Turn without attacks.
-def no_action():
-    ev3.screen.load_image(ImageFile.ZZZ)
-    ev3.speaker.play_file(SoundFile.INSECT_CHIRP)
-
-# EV3 looks for targets in the field.
-def find_target():
-    ev3.screen.load_image(ImageFile.TARGET)
-    ev3.speaker.play_file(SoundFile.SONAR)
-    """ TODO """
-    return None
-
-# EV3 chooses a target.
-def choose_target(targets):
-    """ TODO """
-    pass
-
-# EV3 attacks a target.
-def attack(target):
-    """ TODO """
-    pass
 
 
 ev3.speaker.play_file(SoundFile.BACKING_ALERT)  # Robot moving backward.
