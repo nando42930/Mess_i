@@ -8,46 +8,32 @@ from pybricks.tools import wait, StopWatch, DataLog
 from pybricks.robotics import DriveBase
 from pybricks.media.ev3dev import SoundFile, ImageFile, Font
 import player
+import random
 
 
 # This program requires LEGO EV3 MicroPython v2.0 or higher.
 # Click "Open user guide" on the EV3 extension tab for more information.
 
 
-# Initialize EV3 Brick.
-ev3 = EV3Brick()
-ev3.speaker.set_volume(100, which='_all_')
-# ev3.speaker.set_speech_options(language='en', voice='f1', speed=None, pitch=99)
-# print("Battery(mV):", ev3.battery.voltage())
-if ev3.battery.voltage() < 2250:
-    ev3.speaker.say("Battery below 25%. Please, recharge.")
-ev3.light.on(Color.WHITE)
-ev3.screen.load_image(ImageFile.ANGRY)
-ev3.speaker.play_file(SoundFile.GO)
-""" big_font = Font(size=24, bold=True)
-ev3.screen.set_font(big_font)
-str = "Hello!"
-ev3.screen.draw_text((178-len(str))/2, 63, str) """
 
-# Initialize motors.
+# Initialize motors, drive base and sensors.
 left_motor = Motor(Port.C)
 right_motor = Motor(Port.B)
 crane_motor1 = Motor(Port.A)
 crane_motor2 = Motor(Port.D)
-
-# Initialize drive base.
 robot = DriveBase(left_motor, right_motor, wheel_diameter=35, axle_track=184)
-
-# Initialize sensors.
 color_sensor = ColorSensor(Port.S1)
 touch_sensor = TouchSensor(Port.S3)
 ultrasonic_sensor = UltrasonicSensor(Port.S4)
 
+
 # Initialize global variables.
+ev3 = EV3Brick()
+r = player.Robot()
 MAX_TURNS = 13
 SLOTS = 6
 enemies = [None] * SLOTS
-r = player.Robot()
+
 
 
 # Return True when EV3 is the predicted winner. Otherwise, return False.
@@ -139,9 +125,9 @@ def sound_attack():
         ev3.speaker.play_file('SUIII.wav')
 
 # EV3 decides the attack to be executed.
+""" NEEDS TO BE IMPROVED """
 def attack_type():
-    """ TODO """
-    pass
+    return random.randint(1, 3)
 
 # EV3 attacks a target.
 def attack(type):
@@ -162,59 +148,82 @@ def reposition(idx):
     robot.straight(-280 * idx)
 
 
-# Main
-resume()
-for x in range(MAX_TURNS):
-    ev3.speaker.play_file(SoundFile.THREE)
-    wait(1000)
-    ev3.speaker.play_file(SoundFile.TWO)
-    wait(1000)
-    ev3.speaker.play_file(SoundFile.ONE)
-    wait(1000)
-    ev3.speaker.play_file(SoundFile.ZERO)
-    speaker.beep()                          # Turn begins.
-    if(x % 2 == 0):                         # Enemy's turn.
-        """ !!!!!!!!!! TODO !!!!!!!!!! """
-        c = None
-        time = 0
-        reset()
-        while time < 5000:
-            c = color_sensor.color()
-            if c == Color.WHITE or c == Color.BLACK:
-                c = None
-            time = time()
-        if c == None:
-            no_action()
-    else:                                   # Robot's turn.
-        if not predicted_winner():
-            ev3.screen.load_image(ImageFile.HURT)
-            ev3.speaker.play_file(SoundFile.UH_OH)
-            ev3.speaker.play_file(SoundFile.SORRY)
-            ev3.speaker.play_file(SoundFile.CRYING)
+
+# Initialize EV3 Brick.
+def init():
+    ev3.speaker.set_volume(100, which='_all_')
+    # ev3.speaker.set_speech_options(language='en', voice='f1', speed=None, pitch=99)
+    # print("Battery(mV):", ev3.battery.voltage())
+    if ev3.battery.voltage() < 2250:
+        ev3.speaker.say("Battery below 25%. Please, recharge.")
+    ev3.light.on(Color.WHITE)
+    ev3.screen.load_image(ImageFile.ANGRY)
+    ev3.speaker.play_file(SoundFile.GO)
+    """ big_font = Font(size=24, bold=True)
+    ev3.screen.set_font(big_font)
+    str = "Hello!"
+    ev3.screen.draw_text((178-len(str))/2, 63, str) """
+
+
+
+# Game's lifetime.
+def main():
+    init()
+    resume()
+    for x in range(MAX_TURNS):
+        ev3.speaker.play_file(SoundFile.THREE)
+        wait(1000)
+        ev3.speaker.play_file(SoundFile.TWO)
+        wait(1000)
+        ev3.speaker.play_file(SoundFile.ONE)
+        wait(1000)
+        ev3.speaker.play_file(SoundFile.ZERO)
+        speaker.beep()                          # Turn begins.
+        if(x % 2 == 0):                         # Enemy's turn.
+            """ !!!!!!!!!! TODO !!!!!!!!!! """
+            c = None
             time = 0
             reset()
             while time < 5000:
-                ev3.screen.load_image(ImageFile.HURT)
-                wait(500)
-                ev3.screen.load_image(ImageFile.TEAR)
-                wait(500)
+                c = color_sensor.color()
+                if c == Color.WHITE or c == Color.BLACK:
+                    c = None
                 time = time()
-        else:
-            ev3.speaker.play_file(SoundFile.FANTASTIC)
-        # Chooses a target, type of attack, then attacks and repositions itself.
-        find_target()
-        target_idx = pick_target()
-        if target_idx != None:
-            # TODO attack_kind = attack_type()
-            attack_kind = 3
-            r.attack(attack_kind, enemies[target_idx])
-            attack(attack_kind)
-            reposition(target_idx)
-        else:
-            no_action()
-            reposition(SLOTS-1)
-    speaker.beep()                          # Turn ends.
-ev3.light.off()
+            if c == None:
+                no_action()
+        else:                                   # Robot's turn.
+            if not predicted_winner():
+                ev3.screen.load_image(ImageFile.HURT)
+                ev3.speaker.play_file(SoundFile.UH_OH)
+                ev3.speaker.play_file(SoundFile.SORRY)
+                ev3.speaker.play_file(SoundFile.CRYING)
+                time = 0
+                reset()
+                while time < 5000:
+                    ev3.screen.load_image(ImageFile.HURT)
+                    wait(500)
+                    ev3.screen.load_image(ImageFile.TEAR)
+                    wait(500)
+                    time = time()
+            else:
+                ev3.speaker.play_file(SoundFile.FANTASTIC)
+            # Searches for targets and picks one, if possible.
+            find_target()
+            target_idx = pick_target()
+            # Selects an attack, attacks and repositions itself.
+            if target_idx != None:
+                attack_kind = attack_type()
+                r.attack(attack_kind, enemies[target_idx])
+                attack(attack_kind)
+                reposition(target_idx)
+            else:
+                no_action()
+                reposition(SLOTS-1)
+        speaker.beep()                          # Turn ends.
+    ev3.light.off()
+
+if __name__ == '__main__':
+    main()
 
 
 
