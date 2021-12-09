@@ -4,9 +4,5 @@
 	"debug.openDebug": "neverOpen",
 	"python.linting.enabled": false,
 	"python.languageServer": "None",
-	"python.testing.pytestArgs": [
-		"."
-	],
-	"python.testing.unittestEnabled": false,
-	"python.testing.pytestEnabled": true
+	"python.analysis.autoImportCompletions": true
 }
