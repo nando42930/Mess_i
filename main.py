@@ -163,6 +163,7 @@ def reposition(idx):
 
 
 # Main
+resume()
 for x in range(MAX_TURNS):
     ev3.speaker.play_file(SoundFile.THREE)
     wait(1000)
@@ -174,16 +175,24 @@ for x in range(MAX_TURNS):
     speaker.beep()                          # Turn begins.
     if(x % 2 == 0):                         # Enemy's turn.
         """ !!!!!!!!!! TODO !!!!!!!!!! """
-        no_action()
+        c = None
+        time = 0
+        reset()
+        while time < 5000:
+            c = color_sensor.color()
+            if c == Color.WHITE or c == Color.BLACK:
+                c = None
+            time = time()
+        if c == None:
+            no_action()
     else:                                   # Robot's turn.
         if not predicted_winner():
             ev3.screen.load_image(ImageFile.HURT)
             ev3.speaker.play_file(SoundFile.UH_OH)
             ev3.speaker.play_file(SoundFile.SORRY)
             ev3.speaker.play_file(SoundFile.CRYING)
-            resume()
-            reset()
             time = 0
+            reset()
             while time < 5000:
                 ev3.screen.load_image(ImageFile.HURT)
                 wait(500)
