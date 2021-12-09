@@ -1,5 +1,5 @@
 #!/usr/bin/env pybricks-micropython
-import types
+
 from pybricks.hubs import EV3Brick
 from pybricks.ev3devices import (Motor, TouchSensor, ColorSensor,
                                  InfraredSensor, UltrasonicSensor, GyroSensor)
