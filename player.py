@@ -97,46 +97,61 @@ class Robot(Player):
         self.nrg = 500 if self.nrg * 1.5 > 500 else int(self.nrg * 1.5)
 
     # Heals Robot depending on which type of healing is done, if it has enough nrg.
-    def heal_type(self, x):
-        if x == 1 and self.nrg >= 200:
+    def heal_type(self, type):
+        if type == 1 and self.nrg >= 200:
             self.health += Robot.HEAL1
             self.nrg -= Robot.HEAL1_NRG
-        elif x == 2 and self.nrg >= 300:
+        elif type == 2 and self.nrg >= 300:
             self.health += Robot.HEAL2
             self.nrg -= Robot.HEAL2_NRG
-        elif x == 3 and self.nrg >= 400:
+        elif type == 3 and self.nrg >= 400:
             self.health += Robot.HEAL3
             self.nrg -= Robot.HEAL3_NRG
-        else: print("Not enough energy.")
+        else:
+            print("Not enough energy to heal.")
+            return False
+        return True
 
     # Attacks a certain target by crane, touch or sound.
     def attack(self, type, target):
-        self.nrg -= Robot.CRANE_NRG if type == 1 else Robot.TOUCH_NRG if type == 2 else Robot.SOUND_NRG
-        target.health -= Robot.CRANE if type == 1 else Robot.TOUCH if type == 2 else Robot.SOUND
+        if type == 1 and self.nrg >= Robot.CRANE_NRG:
+            self.nrg -= Robot.CRANE_NRG
+            target.health -= Robot.CRANE
+        elif type == 2 and self.nrg >= Robot.TOUCH_NRG:
+            self.nrg -= Robot.TOUCH_NRG
+            target.health -= Robot.TOUCH
+        elif type == 3 and self.nrg >= Robot.SOUND_NRG:
+            self.nrg -= Robot.SOUND_NRG
+            target.health -= Robot.SOUND
+        else:
+            print("Not enough energy to attack.")
+            return False
+        return True
 
 
 
 """ """ """ """ """ """ """ TESTING SECTION """ """ """ """ """ """ """
 
-print()
-print("######################## TESTING ########################")
-print()
-robot_1 = Robot()
-print("Strength:", robot_1.strength, " Attacks:", robot_1.attacks, end = "  ")
-print("Health:", robot_1.health, end = "  ")
-print("Attack impact:", robot_1.attack_impact, " Energy:", robot_1.nrg)
-robot_1.heal_type(1)
-print("Health:", robot_1.health, " Energy:", robot_1.nrg)
-robot_1.heal_type(3)
-robot_1.heal()
-print("Health:", robot_1.health, " Energy:", robot_1.nrg)
-print()
-inf_1 = Infantry()
-print("Strength:", inf_1.strength, " Attacks:", inf_1.attacks, end = "  ")
-print("Health:", inf_1.health, " Attack impact:", inf_1.attack_impact)
-inf_1.has_attacked()
-print("Infantry attacked once. Attacks remaining:", inf_1.attacks)
-robot_1.attack(3, inf_1)
-print("Infantry was attacked. Health remaining:", inf_1.health, end = "  ")
-print("Current attack impact:", inf_1.attack_impact)
-print()
+# print()
+# print("######################## TESTING ########################")
+# print()
+# robot_1 = Robot()
+# print("Strength:", robot_1.strength, " Attacks:", robot_1.attacks, end = "  ")
+# print("Health:", robot_1.health, end = "  ")
+# print("Attack impact:", robot_1.attack_impact, " Energy:", robot_1.nrg)
+# robot_1.heal_type(2)
+# print("Health:", robot_1.health, " Energy:", robot_1.nrg)
+# robot_1.heal_type(3)
+# robot_1.heal()
+# print("Health:", robot_1.health, " Energy:", robot_1.nrg)
+# print()
+# inf_1 = Infantry()
+# print("Strength:", inf_1.strength, " Attacks:", inf_1.attacks, end = "  ")
+# print("Health:", inf_1.health, " Attack impact:", inf_1.attack_impact)
+# inf_1.has_attacked()
+# print("Infantry attacked once. Attacks remaining:", inf_1.attacks)
+# robot_1.attack(3, inf_1)
+# print("Infantry was attacked. Health remaining:", inf_1.health, end = "  ")
+# print("Current attack impact:", inf_1.attack_impact)
+# robot_1.attack(1, inf_1)
+# print()
