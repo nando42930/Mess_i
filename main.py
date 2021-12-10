@@ -29,6 +29,7 @@ ultrasonic_sensor = UltrasonicSensor(Port.S4)
 
 # Initialize global variables.
 ev3 = EV3Brick()
+time = StopWatch()
 r = player.Robot()
 MAX_TURNS = 13
 SLOTS = 6
@@ -43,7 +44,7 @@ def predicted_winner():
 
 # Turn without attacks.
 def no_action():
-    ev3.screen.load_image(ImageFile.ZZZ)
+    # ev3.screen.load_image(ImageFile.ZZZ)
     ev3.speaker.play_file(SoundFile.INSECT_CHIRP)
 
 # EV3 looks for targets in the field.
@@ -54,13 +55,15 @@ def find_target():
     for current_slot in range(SLOTS):
         while color_sensor.color() == Color.WHITE:
             robot.drive(speed=-100, turn_rate=0)
-        robot.stop(stop_type=Stop.HOLD)
+        # robot.stop(stop_type=Stop.HOLD)
+        robot.stop()
         ev3.speaker.play_file(SoundFile.BACKING_ALERT)
         robot.straight(70)
         robot.turn(90)
         while color_sensor.color() == Color.WHITE:
             robot.drive(speed=-100, turn_rate=0)
-        robot.stop(stop_type=Stop.HOLD)
+        # robot.stop(stop_type=Stop.HOLD)
+        robot.stop()
 
         # If found, assigns an enemy to a slot, according to his color.
         enemy_found = None
@@ -83,7 +86,7 @@ def find_target():
 # EV3 picks a target.
 """ NEEDS TO BE IMPROVED """
 def pick_target():
-    for idx in len(enemies)-1:
+    for idx in range(len(enemies)):
         if enemies[idx] != None:
             if idx != len(enemies)-1:
                 ev3.speaker.play_file(SoundFile.BACKING_ALERT)
@@ -99,7 +102,8 @@ def pick_target():
 def crane_attack():
     while ultrasonic_sensor.distance() >= 200:
         robot.drive(speed=-100, turn_rate=0)
-    robot.stop(stop_type=Stop.HOLD)
+    # robot.stop(stop_type=Stop.HOLD)
+    robot.stop()
     crane_motor1.run_time(1000, 5000, then=Stop.HOLD, wait=True)
     crane_motor2.run_time(700, 5000, then=Stop.HOLD, wait=True)
     crane_motor1.run_time(1000, 5000, then=Stop.HOLD, wait=True)
@@ -113,7 +117,8 @@ def crane_attack():
 def touch_attack():
     while touch_sensor.pressed() == False:
         robot.drive(speed=-100, turn_rate=0)
-    robot.stop(stop_type=Stop.HOLD)
+    # robot.stop(stop_type=Stop.HOLD)
+    robot.stop()
     ev3.speaker.play_file(SoundFile.BACKING_ALERT)
     while color_sensor.color() == Color.WHITE or color_sensor.color() == Color.BLACK:
         robot.drive(speed=100, turn_rate=0)
@@ -153,8 +158,9 @@ def reposition(idx):
 def init():
     ev3.speaker.set_volume(100, which='_all_')
     # ev3.speaker.set_speech_options(language='en', voice='f1', speed=None, pitch=99)
-    # print("Battery(mV):", ev3.battery.voltage())
-    if ev3.battery.voltage() < 2250:
+    mV = ev3.battery.voltage()
+    print("Battery(mV):", mV)
+    if mV != None and mV < 2250:
         ev3.speaker.say("Battery below 25%. Please, recharge.")
     ev3.light.on(Color.WHITE)
     ev3.screen.load_image(ImageFile.ANGRY)
@@ -169,8 +175,9 @@ def init():
 # Game's lifetime.
 def main():
     init()
-    # resume()
+    time.resume()
     for x in range(MAX_TURNS):
+        print("I'm running:", x)
         ev3.speaker.play_file(SoundFile.THREE)
         wait(1000)
         ev3.speaker.play_file(SoundFile.TWO)
@@ -178,17 +185,17 @@ def main():
         ev3.speaker.play_file(SoundFile.ONE)
         wait(1000)
         ev3.speaker.play_file(SoundFile.ZERO)
-        ev3.speaker.beep()                          # Turn begins.
+        ev3.speaker.beep()                      # Turn begins.
         if(x % 2 == 0):                         # Enemy's turn.
             """ !!!!!!!!!! TODO !!!!!!!!!! """
             c = None
-            time = 0
-            # reset()
-            while time < 5000:
+            t = 0
+            time.reset()
+            while t != None and t < 5000:
                 c = color_sensor.color()
                 if c == Color.WHITE or c == Color.BLACK:
                     c = None
-                time = time()
+                t = time.time()
             if c == None:
                 no_action()
         else:                                   # Robot's turn.
@@ -197,14 +204,14 @@ def main():
                 ev3.speaker.play_file(SoundFile.UH_OH)
                 ev3.speaker.play_file(SoundFile.SORRY)
                 ev3.speaker.play_file(SoundFile.CRYING)
-                time = 0
-                # reset()
-                while time < 5000:
+                t = 0
+                time.reset()
+                while t != None and t < 5000:
                     ev3.screen.load_image(ImageFile.HURT)
                     wait(500)
                     ev3.screen.load_image(ImageFile.TEAR)
                     wait(500)
-                    time = time()
+                    t = time.time()
             else:
                 ev3.speaker.play_file(SoundFile.FANTASTIC)
             # Searches for targets and picks one, if possible.
