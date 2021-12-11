@@ -213,6 +213,7 @@ def under_attack():
             # ev3.screen.load_image(ImageFile.BLACK_EYE)
             ev3.speaker.play_file(SoundFile.OUCH)
             last_idx = idx
+    return last_idx
 """ TODO """
 
 
