@@ -1,7 +1,7 @@
-from abc import ABCMeta, abstractmethod
+# from abc import ABCMeta, abstractmethod
 
 # Parent class of Tank, Artillery, Infantry and Robot.
-class Player(metaclass=ABCMeta):
+class Player:
 
     # Player constructor.
     def __init__(self, strength, attacks, health):
@@ -11,9 +11,12 @@ class Player(metaclass=ABCMeta):
 
     # Each child class has its own impact, mutable along the game.
     @property
-    @abstractmethod
     def attack_impact(self):
         pass
+
+    # Checks if this object still has attacks left.
+    def can_attack(self):
+        return self.attacks > 0
 
     # Updates attacks remaining, after an attack.
     def has_attacked(self):
@@ -61,6 +64,10 @@ class Infantry(Player):
     @property
     def attack_impact(self):
         return int(self.strength * self.health / 100)
+
+    def __str__(self):
+        return ("Infantry was attacked. Health remaining: " + str(self.health) +
+        " Current attack impact: " + str(self.attack_impact))
 
 
 # Child class of Player.
@@ -126,6 +133,7 @@ class Robot(Player):
         else:
             print("Not enough energy to attack.")
             return False
+        print(target)
         return True
 
 
@@ -151,7 +159,5 @@ class Robot(Player):
 # inf_1.has_attacked()
 # print("Infantry attacked once. Attacks remaining:", inf_1.attacks)
 # robot_1.attack(3, inf_1)
-# print("Infantry was attacked. Health remaining:", inf_1.health, end = "  ")
-# print("Current attack impact:", inf_1.attack_impact)
 # robot_1.attack(1, inf_1)
 # print()
